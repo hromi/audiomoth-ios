@@ -43,7 +43,6 @@ jobs:
       # Device archive — unsigned IPA you can install via Sideloadly / AltStore
       - name: Archive (device, unsigned)
         run: |
-          set -o pipefail
           xcodebuild \
             -project AudioMothConfig.xcodeproj \
             -scheme AudioMothConfig \
@@ -53,8 +52,7 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             -archivePath /tmp/AudioMothConfig.xcarchive \
-            archive \
-          2>&1 | grep -E "(error:|Build succeeded|FAILED)" || true
+            archive
 
       - name: Package IPA
         run: |
