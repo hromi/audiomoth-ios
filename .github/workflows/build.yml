@@ -58,9 +58,12 @@ jobs:
 
       - name: Package IPA
         run: |
+          echo "=== xcarchive contents ==="
+          find /tmp/AudioMothConfig.xcarchive -name "*.app" -maxdepth 5
+          APP=$(find /tmp/AudioMothConfig.xcarchive -name "*.app" -maxdepth 5 | head -1)
+          echo "Using: $APP"
           mkdir -p /tmp/Payload
-          cp -r /tmp/AudioMothConfig.xcarchive/Products/Applications/AudioMothConfig.app \
-                /tmp/Payload/
+          cp -r "$APP" /tmp/Payload/
           cd /tmp && zip -qr AudioMothConfig.ipa Payload/
           echo "IPA size: $(du -sh /tmp/AudioMothConfig.ipa | cut -f1)"
 
