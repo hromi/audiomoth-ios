@@ -1,0 +1,44 @@
+name: AudioMothConfig
+
+options:
+  bundleIdPrefix: info.openacousticdevices
+  deploymentTarget:
+    iOS: "18.1"
+  createIntermediateGroups: true
+  xcodeVersion: "16.0"
+  indentWidth: 4
+  tabWidth: 4
+
+targets:
+  AudioMothConfig:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.1"
+
+    sources:
+      - path: iOS/AudioMothConfig
+        excludes:
+          - "Resources/**"
+          - "**/*.plist"
+
+    resources:
+      - path: iOS/AudioMothConfig/Assets.xcassets
+
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: info.openacousticdevices.AudioMothConfig
+        SWIFT_VERSION: "5.9"
+        INFOPLIST_FILE: iOS/AudioMothConfig/Resources/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        TARGETED_DEVICE_FAMILY: "1,2"       # iPhone + iPad
+        IPHONEOS_DEPLOYMENT_TARGET: "18.1"
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ENABLE_PREVIEWS: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+    dependencies:
+      - sdk: MapKit.framework
+      - sdk: CoreLocation.framework
+      - sdk: ExternalAccessory.framework
