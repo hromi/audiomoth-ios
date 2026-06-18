@@ -191,10 +191,9 @@ struct PacketBuilder {
     }
 
     private static func writeInt16LE(_ buf: inout [UInt8], at idx: inout Int, value: Int) {
-        let v = Int16(clamping: value)
-        let bits = v.bitPattern
+        let bits = UInt16(bitPattern: Int16(clamping: value))
         buf[idx]     = UInt8(bits & 0xFF)
-        buf[idx + 1] = UInt8((bits >> 8) & 0xFF)
+        buf[idx + 1] = UInt8(bits >> 8)
         idx += 2
     }
 

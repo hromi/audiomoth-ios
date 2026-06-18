@@ -35,6 +35,7 @@ struct ScheduleView: View {
 
     @ViewBuilder
     private var timePeriodsSections: some View {
+        @Bindable var vm = vm
         Section {
             ForEach($vm.config.timePeriods) { $period in
                 TimePeriodEditor(period: $period)
@@ -57,6 +58,7 @@ struct ScheduleView: View {
 
     @ViewBuilder
     private var sunScheduleSections: some View {
+        @Bindable var vm = vm
         Section("Sun event") {
             Picker("Mode", selection: Binding(
                 get: { vm.config.sunMode },
