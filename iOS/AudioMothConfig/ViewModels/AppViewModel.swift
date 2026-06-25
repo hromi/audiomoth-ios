@@ -10,8 +10,7 @@ final class AppViewModel {
     var isConfiguring = false
     var configureError: String?
     var configureSuccess = false
-    var showExporter = false
-    var exportData: Data?
+    var shareURL: URL?
 
     private let deviceService: any DeviceServiceProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -74,10 +73,12 @@ final class AppViewModel {
 
     // MARK: - File export/import
 
-    func exportConfig() {
-        guard let data = try? ConfigFileService.encode(config) else { return }
-        exportData = data
-        showExporter = true
+    func prepareShare() {
+        let text = ConfigFileService.toConfigText(config, deviceInfo: connectedDevice)
+        guard let data = text.data(using: .utf8) else { return }
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent("AudioMoth_Config.txt")
+        guard (try? data.write(to: url)) != nil else { return }
+        shareURL = url
     }
 
     func importConfig(from data: Data) {

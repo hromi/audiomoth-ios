@@ -1,5 +1,5 @@
 import SwiftUI
-import UniformTypeIdentifiers
+import UIKit
 
 struct ContentView: View {
 
@@ -41,7 +41,7 @@ struct ContentView: View {
                     }
                 }
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button { vm.exportConfig() } label: {
+                    Button { vm.prepareShare() } label: {
                         Image(systemName: "square.and.arrow.up")
                     }
                     configureButton
@@ -56,12 +56,12 @@ struct ContentView: View {
                 url.stopAccessingSecurityScopedResource()
             }
         }
-        .fileExporter(
-            isPresented: Binding(get: { vm.showExporter }, set: { vm.showExporter = $0 }),
-            document: ConfigDocument(data: vm.exportData ?? Data()),
-            contentType: .json,
-            defaultFilename: "AudioMoth_Config.json"
-        ) { _ in }
+        .sheet(isPresented: Binding(get: { vm.shareURL != nil }, set: { if !$0 { vm.shareURL = nil } })) {
+            if let url = vm.shareURL {
+                ShareSheet(items: [url])
+                    .presentationDetents([.medium, .large])
+            }
+        }
         .overlay(configureOverlay)
     }
 
@@ -121,15 +121,12 @@ struct ToastView: View {
     }
 }
 
-struct ConfigDocument: FileDocument {
-    static var readableContentTypes: [UTType] { [.json] }
-    var data: Data
+struct ShareSheet: UIViewControllerRepresentable {
+    let items: [Any]
 
-    init(data: Data) { self.data = data }
-    init(configuration: ReadConfiguration) throws {
-        data = try configuration.file.regularFileContents ?? { throw CocoaError(.fileReadCorruptFile) }()
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: items, applicationActivities: nil)
     }
-    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        FileWrapper(regularFileWithContents: data)
-    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
